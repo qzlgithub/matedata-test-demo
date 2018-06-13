@@ -20,6 +20,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
@@ -32,7 +33,8 @@ import java.util.Map;
 
 public class APITest
 {
-    private static final String URL_QXBG = "https://api.matedata.net/detection/hologram/HLGep8XB2ItKqElp1ktuh5SpDYzLQ8xz";
+    private static final String URL_QXBG =
+            "https://api.matedata.net/detection/hologram/HLGep8XB2ItKqElp1ktuh5SpDYzLQ8xz";
     private static final String INPUT_FILE = "C:\\Users\\JinKX\\Desktop\\to_test\\test\\%s.xlsx";
     private static final String OUTPUT_FILE = "C:\\Users\\JinKX\\Desktop\\to_test\\test\\%s-全息报告.xlsx";
     static int c;
@@ -41,7 +43,7 @@ public class APITest
 
     public static void main(String[] args) throws IOException
     {
-        String filename = "1";  // TODO 带测试的文件名
+        String filename = "人员姓名";  // TODO 带测试的文件名
         // 构建请求头信息
         buildRequestHeader();
         String inputFile = String.format(INPUT_FILE, filename);
@@ -111,11 +113,14 @@ public class APITest
                 continue;
             }
             p = new Person();
-            p.setId(id);
-            p.setName(name);
-            p.setIdNo(idNo);
-            p.setPhone(phone);
-            list.add(p);
+            p.setId(id.trim());
+            p.setName(name.trim());
+            p.setIdNo(idNo.trim());
+            p.setPhone(phone.trim());
+            if(phone.trim().length() == 11)
+            {
+                list.add(p);
+            }
         }
         System.out.println("已读入" + list.size() + "个用户信息");
         return list;
@@ -182,10 +187,10 @@ public class APITest
 
     private static void writeOutputFile(String outputFile, List<HologramResp> respList) throws IOException
     {
-        Workbook wb = new XSSFWorkbook();
+        XSSFWorkbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet("sheet");
         //冻结窗口
-        sheet.createFreezePane(4,2);
+        sheet.createFreezePane(4, 2);
 
         Row row = sheet.createRow(0);
         Cell cell2 = row.createCell(0);
@@ -524,7 +529,7 @@ public class APITest
         if(respList != null && respList.size() > 0)
         {
             /*int c = 2;*/
-            c=2;
+            c = 2;
             // System.out.println(">>>: " + respList.size());
             for(HologramResp hr : respList)
             {
@@ -922,51 +927,54 @@ public class APITest
             }
         }
         Row _row = sheet.createRow(c);
-        int rows = sheet.getPhysicalNumberOfRows();
-        System.out.println(c+"   "+rows);
+        /*int rows = sheet.getPhysicalNumberOfRows();*/
+        System.out.println("有" + (c - 2) + "数据");
         Cell cel_ = _row.createCell(2);
         cel_.setCellValue("命中数：");
 
         //查询状态命中数求和
         Cell cel_row = _row.createCell(3);
-        cel_row.setCellFormula("SUM(D3:D"+c+")");
+        cel_row.setCellFormula("SUM(D3:D" + c + ")");
         cel_row.setCellType(CellType.FORMULA);
+        XSSFFormulaEvaluator evaluator = new XSSFFormulaEvaluator(wb);
+        double result = evaluator.evaluate(cel_row).getNumberValue();
 
         //黑名单命中数求和
         Cell cel_row0 = _row.createCell(4);
-        cel_row0.setCellFormula("SUM(E3:E"+c+")");
+        cel_row0.setCellFormula("SUM(E3:E" + c + ")");
         cel_row0.setCellType(CellType.FORMULA);
 
         //常欠客命中数求和
         Cell cel_row1 = _row.createCell(5);
-        cel_row1.setCellFormula("SUM(F3:F"+c+")");
+        cel_row1.setCellFormula("SUM(F3:F" + c + ")");
         cel_row1.setCellType(CellType.FORMULA);
 
         //多头客命中数求和
         Cell cel_row2 = _row.createCell(19);
-        cel_row2.setCellFormula("SUM(T3:T"+c+")");
+        cel_row2.setCellFormula("SUM(T3:T" + c + ")");
         cel_row2.setCellType(CellType.FORMULA);
 
         //拒贷客命中数求和
         Cell cel_row3 = _row.createCell(32);
-        cel_row3.setCellFormula("SUM(AG3:AG"+c+")");
+        cel_row3.setCellFormula("SUM(AG3:AG" + c + ")");
         cel_row3.setCellType(CellType.FORMULA);
 
         //通过客命中数求和
         Cell cel_row4 = _row.createCell(45);
-        cel_row4.setCellFormula("SUM(AT3:AT"+c+")");
+        cel_row4.setCellFormula("SUM(AT3:AT" + c + ")");
         cel_row4.setCellType(CellType.FORMULA);
 
         //优良客命中数求和
         Cell cel_row5 = _row.createCell(58);
-        cel_row5.setCellFormula("SUM(BG3:BG"+c+")");
+        cel_row5.setCellFormula("SUM(BG3:BG" + c + ")");
         cel_row5.setCellType(CellType.FORMULA);
 
         CellStyle style3 = wb.createCellStyle();
-        XSSFFont font = (XSSFFont) wb.createFont();
+        XSSFFont font = wb.createFont();
         font.setColor(IndexedColors.RED.index);
         font.setFontName("等线");
         font.setFontHeightInPoints((short) 11);
+        style3.setAlignment(HorizontalAlignment.RIGHT);
         style3.setFont(font);
         cel_.setCellStyle(style3);
         cel_row.setCellStyle(style3);
@@ -979,9 +987,16 @@ public class APITest
 
         sheet.setForceFormulaRecalculation(true);
 
-        /*Row _row1 = sheet.createRow(c+1);
-        Cell cel_1 = _row.createCell(3);
-        cel_1.setCellValue();*/
+        //命中率
+        Row _row1 = sheet.createRow(c + 1);
+        Cell cel_1 = _row1.createCell(3);
+        if((c - 2) != 0 && result != 0)
+        {
+            double result1 = ((result / (c - 2)) * 100);
+            System.out.println(result1);
+            cel_1.setCellValue(String.format("%.2f", result1) + "%");
+            cel_1.setCellStyle(style3);
+        }
 
         OutputStream out = new FileOutputStream(outputFile);
         wb.write(out);
