@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class APITest
 {
@@ -43,7 +45,7 @@ public class APITest
 
     public static void main(String[] args) throws IOException
     {
-        String filename = "人员姓名";  // TODO 带测试的文件名
+        String filename = "Test";  // TODO 带测试的文件名
         // 构建请求头信息
         buildRequestHeader();
         String inputFile = String.format(INPUT_FILE, filename);
@@ -89,6 +91,7 @@ public class APITest
     private static List<Person> readPersonInfoFromExcel(String excelFile) throws IOException
     {
         List<Person> list = new ArrayList<>();
+        Set<String> phoneList = new HashSet<>();
         Workbook wb = new XSSFWorkbook(excelFile);
         // 自定义id，姓名，身份证，手机号
         Sheet sheet = wb.getSheetAt(0);
@@ -119,7 +122,11 @@ public class APITest
             p.setPhone(phone.trim());
             if(phone.trim().length() == 11)
             {
-                list.add(p);
+                if(!phoneList.contains(phone.trim()))
+                {
+                    list.add(p);
+                    phoneList.add(phone.trim());
+                }
             }
         }
         System.out.println("已读入" + list.size() + "个用户信息");
