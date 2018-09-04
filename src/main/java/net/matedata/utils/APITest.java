@@ -37,15 +37,15 @@ public class APITest
 {
     private static final String URL_QXBG =
             "https://api.matedata.net/detection/hologram/HLGep8XB2ItKqElp1ktuh5SpDYzLQ8xz";
-    private static final String INPUT_FILE = "C:\\Users\\JinKX\\Desktop\\to_test\\test\\%s.xlsx";
-    private static final String OUTPUT_FILE = "C:\\Users\\JinKX\\Desktop\\to_test\\test\\%s-全息报告.xlsx";
+    private static final String INPUT_FILE = "C:\\Users\\Administrator\\Desktop\\to_test\\test\\%s.xlsx";
+    private static final String OUTPUT_FILE = "C:\\Users\\Administrator\\Desktop\\to_test\\test\\%s-全息报告.xlsx";
     static int c;
 
     private static Map<String, String> headers; // 请求头
 
     public static void main(String[] args) throws IOException
     {
-        String filename = "Test";  // TODO 带测试的文件名
+        String filename = "黑名单测试-尚咏金服";  // TODO 带测试的文件名
         // 构建请求头信息
         buildRequestHeader();
         String inputFile = String.format(INPUT_FILE, filename);
@@ -155,6 +155,7 @@ public class APITest
                 hr = new HologramResp();
                 hr.setPerson(person);
                 JSONObject res = resData.getJSONObject(person.getPhone());
+                /*System.out.println(">>> " + person.getPhone() + " : " + JSON.toJSONString(res));*/
                 if(res != null && (res.getInteger("blacklistCode") == 0 || res.getInteger("overdueCode") == 0 ||
                         res.getInteger("multiRegisterCode") == 0 || res.getInteger("creditableCode") == 0 ||
                         res.getInteger("rejecteeCode") == 0 || res.getInteger("favourableCode") == 0))
@@ -549,8 +550,8 @@ public class APITest
 
                 Row _row = sheet.createRow(c);
                 _row.createCell(0).setCellValue(hr.getPerson().getName());
-                _row.createCell(1).setCellValue(hr.getPerson().getIdNo());
-                _row.createCell(2).setCellValue(hr.getPerson().getPhone());
+                _row.createCell(1).setCellValue(BlurUtils.blurPersonIdNo(hr.getPerson().getIdNo()));
+                _row.createCell(2).setCellValue(BlurUtils.blurPersonMobile(hr.getPerson().getPhone()));
                 _row.createCell(3).setCellValue(hr.getHit());
 
                 Cell cel_row0 = _row.createCell(4);

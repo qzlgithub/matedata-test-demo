@@ -50,13 +50,15 @@ public class SignUtils
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException
     {
         Map<String, Object> m = new HashMap<>();
-        m.put("timestamp", 1525683727);
-        m.put("idNo", "110102199001012279");
-        m.put("name", "test");
-        m.put("phone", "13624793586");
+        m.put("timestamp", 1532079508);
+        m.put("idNo", "430802199708213223");
+        m.put("name", "龙中华");
+        m.put("phone", "13912754258");
+        /*13506543199*/
+        /*13590223977*/
         SortedMap sortedMap = MapUtils.sortKey(m);
         String content = JSON.toJSONString(sortedMap);
         System.out.println("content: " + content);
-        System.out.println("sign: " + sign(content, "61c072ac63db41e0875657edc2533a94"));
+        System.out.println("sign: " + sign(content, "26e603cb15a54c05bf319694c6dbf9c0"));
     }
 }
