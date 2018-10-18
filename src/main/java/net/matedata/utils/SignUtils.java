@@ -49,11 +49,12 @@ public class SignUtils
     public static void main(String[] args)
             throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException
     {
+        long t = System.currentTimeMillis()/1000;
         Map<String, Object> m = new HashMap<>();
-        m.put("timestamp", 1532079508);
-        m.put("idNo", "430802199708213223");
-        m.put("name", "龙中华");
-        m.put("phone", "13912754258");
+        m.put("timestamp", t);
+        m.put("idNo", "430802199608120332");
+        m.put("name", "屈泽林");
+        m.put("phone", "15700106023");
         /*13506543199*/
         /*13590223977*/
         SortedMap sortedMap = MapUtils.sortKey(m);

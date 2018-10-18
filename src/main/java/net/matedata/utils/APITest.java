@@ -45,7 +45,7 @@ public class APITest
 
     public static void main(String[] args) throws IOException
     {
-        String filename = "黑名单测试-尚咏金服";  // TODO 带测试的文件名
+        String filename = "10.10明动科技";  // TODO 带测试的文件名
         // 构建请求头信息
         buildRequestHeader();
         String inputFile = String.format(INPUT_FILE, filename);
