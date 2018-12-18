@@ -40,12 +40,11 @@ public class APITest
     private static final String INPUT_FILE = "C:\\Users\\Administrator\\Desktop\\to_test\\test\\%s.xlsx";
     private static final String OUTPUT_FILE = "C:\\Users\\Administrator\\Desktop\\to_test\\test\\%s-全息报告.xlsx";
     static int c;
-
     private static Map<String, String> headers; // 请求头
 
     public static void main(String[] args) throws IOException
     {
-        String filename = "10.10明动科技";  // TODO 带测试的文件名
+        String filename = "尚咏测试数据20181218";  // TODO 带测试的文件名
         // 构建请求头信息
         buildRequestHeader();
         String inputFile = String.format(INPUT_FILE, filename);
@@ -77,7 +76,6 @@ public class APITest
             respList.addAll(resList);
             System.out.println(_personList.size() + "个已查询");
         }
-
         writeOutputFile(outputFile, respList);
         System.out.println("测试结果输出成功：" + outputFile);
     }
@@ -122,11 +120,17 @@ public class APITest
             p.setPhone(phone.trim());
             if(phone.trim().length() == 11)
             {
-                if(!phoneList.contains(phone.trim()))
+                /*if(!phoneList.contains(phone.trim()))
                 {
                     list.add(p);
                     phoneList.add(phone.trim());
                 }
+                else
+                {
+                    System.out.println("重复号码：" + phone.trim());
+                }*/
+                list.add(p);
+                phoneList.add(phone.trim());
             }
         }
         System.out.println("已读入" + list.size() + "个用户信息");
@@ -199,7 +203,6 @@ public class APITest
         Sheet sheet = wb.createSheet("sheet");
         //冻结窗口
         sheet.createFreezePane(4, 2);
-
         Row row = sheet.createRow(0);
         Cell cell2 = row.createCell(0);
         cell2.setCellValue("姓名");
@@ -223,7 +226,6 @@ public class APITest
         cell11.setCellValue("6. 优良客");
         Cell cell12 = row.createCell(70);
         cell12.setCellValue("");
-
         Row row1 = sheet.createRow(1);
         Cell cel0 = row1.createCell(4);
         cel0.setCellValue("是否命中");
@@ -359,7 +361,6 @@ public class APITest
         cel64.setCellValue("近90天还款平台个数");
         Cell cel65 = row1.createCell(70);
         cel65.setCellValue("还款平台");
-
         //合并单元格
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
@@ -370,22 +371,18 @@ public class APITest
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 32, 44));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 45, 57));
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 58, 70));
-
         //行高
         //row.setHeightInPoints(35);
-
         CellStyle style0 = wb.createCellStyle();
         //居中
         style0.setAlignment(HorizontalAlignment.CENTER);
         style0.setVerticalAlignment(VerticalAlignment.CENTER);
         //自动换行
         style0.setWrapText(true);
-
         cell2.setCellStyle(style0);
         cell3.setCellStyle(style0);
         cell4.setCellStyle(style0);
         cell5.setCellStyle(style0);
-
         //第二行文字的自动换行和居中设置
         cel1.setCellStyle(style0);
         cel2.setCellStyle(style0);
@@ -474,7 +471,6 @@ public class APITest
         cel63.setCellStyle(style0);
         cel64.setCellStyle(style0);
         cel65.setCellStyle(style0);
-
         //前景填充色
         CellStyle style = wb.createCellStyle();
         style.setFillForegroundColor(IndexedColors.LIGHT_TURQUOISE.getIndex());
@@ -490,7 +486,6 @@ public class APITest
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         cell6.setCellStyle(style);
-
         CellStyle style1 = wb.createCellStyle();
         style1.setFillForegroundColor(IndexedColors.CORNFLOWER_BLUE.getIndex());
         style1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -505,7 +500,6 @@ public class APITest
         style1.setAlignment(HorizontalAlignment.CENTER);
         style1.setVerticalAlignment(VerticalAlignment.CENTER);
         cell7.setCellStyle(style1);
-
         CellStyle style2 = wb.createCellStyle();
         style2.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         style2.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -521,19 +515,16 @@ public class APITest
         //居中
         style2.setAlignment(HorizontalAlignment.CENTER);
         style2.setVerticalAlignment(VerticalAlignment.CENTER);
-
         cell8.setCellStyle(style);
         cell9.setCellStyle(style1);
         cell10.setCellStyle(style);
         cell11.setCellStyle(style1);
-
         cel0.setCellStyle(style2);
         cel.setCellStyle(style2);
         cel14.setCellStyle(style2);
         cel27.setCellStyle(style2);
         cel40.setCellStyle(style2);
         cel53.setCellStyle(style2);
-
         if(respList != null && respList.size() > 0)
         {
             /*int c = 2;*/
@@ -547,25 +538,21 @@ public class APITest
                 JSONObject obj3 = hr.getRefuseRes();
                 JSONObject obj4 = hr.getLoanRes();
                 JSONObject obj5 = hr.getRepaymentRes();
-
                 Row _row = sheet.createRow(c);
                 _row.createCell(0).setCellValue(hr.getPerson().getName());
                 _row.createCell(1).setCellValue(BlurUtils.blurPersonIdNo(hr.getPerson().getIdNo()));
                 _row.createCell(2).setCellValue(BlurUtils.blurPersonMobile(hr.getPerson().getPhone()));
                 _row.createCell(3).setCellValue(hr.getHit());
-
                 Cell cel_row0 = _row.createCell(4);
                 cel_row0.setCellValue(hr.getBlacklistCode() == 1 ? 0 : 1);
                 cel_row0.setCellStyle(style2);
                 /*_row.createCell(6).setCellValue(hr.getBlacklistCode() == 1 ? 0 : 1);*/
-
                 //常欠客
                 if(hr.getOverdueCode() == 1)
                 {
                     Cell cel_row = _row.createCell(5);
                     cel_row.setCellValue(0);
                     cel_row.setCellStyle(style2);
-
                 }
                 else
                 {
@@ -586,7 +573,6 @@ public class APITest
                     if(obj.getInteger("overduePlatformTotal") != null)
                     {
                         _row.createCell(10).setCellValue(obj.getInteger("overduePlatformTotal"));
-
                     }
                     if(obj.getInteger("overduePlatformToday") != null)
                     {
@@ -595,7 +581,6 @@ public class APITest
                     if(obj.getInteger("overduePlatform3Days") != null)
                     {
                         _row.createCell(12).setCellValue(obj.getInteger("overduePlatform3Days"));
-
                     }
                     if(obj.getInteger("overduePlatform7Days") != null)
                     {
@@ -626,20 +611,19 @@ public class APITest
                         {
                             pt = arr.getJSONObject(i);
                             sb.append(i + 1)
-                                    .append(". 平台编号：")
-                                    .append(pt.getString("platformCode"))
-                                    .append("，平台类型：")
-                                    .append(pt.getString("platformType"))
-                                    .append("，最早逾期时间：")
-                                    .append(pt.getString("overdueEarliestTime"))
-                                    .append("，最近逾期时间：")
-                                    .append(pt.getString("overdueLatestTime"))
-                                    .append("\n");
+                              .append(". 平台编号：")
+                              .append(pt.getString("platformCode"))
+                              .append("，平台类型：")
+                              .append(pt.getString("platformType"))
+                              .append("，最早逾期时间：")
+                              .append(pt.getString("overdueEarliestTime"))
+                              .append("，最近逾期时间：")
+                              .append(pt.getString("overdueLatestTime"))
+                              .append("\n");
                         }
                     }
                     _row.createCell(18).setCellValue(sb.toString());
                 }
-
                 //多头客
                 if(hr.getMultiRegisterCode() == 1)
                 {
@@ -699,18 +683,17 @@ public class APITest
                         {
                             pt = arr.getJSONObject(i);
                             sb.append(i + 1)
-                                    .append(". 平台编号：")
-                                    .append(pt.getString("platformCode"))
-                                    .append("，平台类型：")
-                                    .append(pt.getString("platformType"))
-                                    .append("，注册时间：")
-                                    .append(pt.getString("registerDate"))
-                                    .append("\n");
+                              .append(". 平台编号：")
+                              .append(pt.getString("platformCode"))
+                              .append("，平台类型：")
+                              .append(pt.getString("platformType"))
+                              .append("，注册时间：")
+                              .append(pt.getString("registerDate"))
+                              .append("\n");
                         }
                     }
                     _row.createCell(31).setCellValue(sb.toString());
                 }
-
                 //拒贷客
                 if(hr.getRefuseCode() == 1)
                 {
@@ -756,7 +739,6 @@ public class APITest
                     if(obj3.getInteger("refusePlatform60Days") != null)
                     {
                         _row.createCell(42).setCellValue(obj3.getInteger("refusePlatform60Days"));
-
                     }
                     if(obj3.getInteger("refusePlatform90Days") != null)
                     {
@@ -771,20 +753,19 @@ public class APITest
                         {
                             pt = arr.getJSONObject(i);
                             sb.append(i + 1)
-                                    .append(". 平台编号：")
-                                    .append(pt.getString("platformCode"))
-                                    .append("，平台类型：")
-                                    .append(pt.getString("platformType"))
-                                    .append("，最早拒贷时间：")
-                                    .append(pt.getString("refuseEarliestDate"))
-                                    .append("，最近拒贷时间：")
-                                    .append(pt.getString("refuseLatestDate"))
-                                    .append("\n");
+                              .append(". 平台编号：")
+                              .append(pt.getString("platformCode"))
+                              .append("，平台类型：")
+                              .append(pt.getString("platformType"))
+                              .append("，最早拒贷时间：")
+                              .append(pt.getString("refuseEarliestDate"))
+                              .append("，最近拒贷时间：")
+                              .append(pt.getString("refuseLatestDate"))
+                              .append("\n");
                         }
                     }
                     _row.createCell(44).setCellValue(sb.toString());
                 }
-
                 //通过客
                 if(hr.getLoanCode() == 1)
                 {
@@ -844,20 +825,19 @@ public class APITest
                         {
                             pt = arr.getJSONObject(i);
                             sb.append(i + 1)
-                                    .append(". 平台编号：")
-                                    .append(pt.getString("platformCode"))
-                                    .append("，平台类型：")
-                                    .append(pt.getString("platformType"))
-                                    .append("，最早放款时间：")
-                                    .append(pt.getString("loanEarliestDate"))
-                                    .append("，最近放款时间：")
-                                    .append(pt.getString("loanLatestDate"))
-                                    .append("\n");
+                              .append(". 平台编号：")
+                              .append(pt.getString("platformCode"))
+                              .append("，平台类型：")
+                              .append(pt.getString("platformType"))
+                              .append("，最早放款时间：")
+                              .append(pt.getString("loanEarliestDate"))
+                              .append("，最近放款时间：")
+                              .append(pt.getString("loanLatestDate"))
+                              .append("\n");
                         }
                     }
                     _row.createCell(57).setCellValue(sb.toString());
                 }
-
                 //优良客
                 if(hr.getRepaymentCode() == 1)
                 {
@@ -917,21 +897,20 @@ public class APITest
                         {
                             pt = arr.getJSONObject(i);
                             sb.append(i + 1)
-                                    .append(". 平台编号：")
-                                    .append(pt.getString("platformCode"))
-                                    .append("，平台类型：")
-                                    .append(pt.getString("platformType"))
-                                    .append("，最早还款时间：")
-                                    .append(pt.getString("repaymentEarliestDate"))
-                                    .append("，最近还款时间：")
-                                    .append(pt.getString("repaymentLatestDate"))
-                                    .append("\n");
+                              .append(". 平台编号：")
+                              .append(pt.getString("platformCode"))
+                              .append("，平台类型：")
+                              .append(pt.getString("platformType"))
+                              .append("，最早还款时间：")
+                              .append(pt.getString("repaymentEarliestDate"))
+                              .append("，最近还款时间：")
+                              .append(pt.getString("repaymentLatestDate"))
+                              .append("\n");
                         }
                     }
                     _row.createCell(70).setCellValue(sb.toString());
                 }
                 c++;
-
             }
         }
         Row _row = sheet.createRow(c);
@@ -939,44 +918,36 @@ public class APITest
         System.out.println("有" + (c - 2) + "数据");
         Cell cel_ = _row.createCell(2);
         cel_.setCellValue("命中数：");
-
         //查询状态命中数求和
         Cell cel_row = _row.createCell(3);
         cel_row.setCellFormula("SUM(D3:D" + c + ")");
         cel_row.setCellType(CellType.FORMULA);
         XSSFFormulaEvaluator evaluator = new XSSFFormulaEvaluator(wb);
         double result = evaluator.evaluate(cel_row).getNumberValue();
-
         //黑名单命中数求和
         Cell cel_row0 = _row.createCell(4);
         cel_row0.setCellFormula("SUM(E3:E" + c + ")");
         cel_row0.setCellType(CellType.FORMULA);
-
         //常欠客命中数求和
         Cell cel_row1 = _row.createCell(5);
         cel_row1.setCellFormula("SUM(F3:F" + c + ")");
         cel_row1.setCellType(CellType.FORMULA);
-
         //多头客命中数求和
         Cell cel_row2 = _row.createCell(19);
         cel_row2.setCellFormula("SUM(T3:T" + c + ")");
         cel_row2.setCellType(CellType.FORMULA);
-
         //拒贷客命中数求和
         Cell cel_row3 = _row.createCell(32);
         cel_row3.setCellFormula("SUM(AG3:AG" + c + ")");
         cel_row3.setCellType(CellType.FORMULA);
-
         //通过客命中数求和
         Cell cel_row4 = _row.createCell(45);
         cel_row4.setCellFormula("SUM(AT3:AT" + c + ")");
         cel_row4.setCellType(CellType.FORMULA);
-
         //优良客命中数求和
         Cell cel_row5 = _row.createCell(58);
         cel_row5.setCellFormula("SUM(BG3:BG" + c + ")");
         cel_row5.setCellType(CellType.FORMULA);
-
         CellStyle style3 = wb.createCellStyle();
         XSSFFont font = wb.createFont();
         font.setColor(IndexedColors.RED.index);
@@ -992,9 +963,7 @@ public class APITest
         cel_row3.setCellStyle(style3);
         cel_row4.setCellStyle(style3);
         cel_row5.setCellStyle(style3);
-
         sheet.setForceFormulaRecalculation(true);
-
         //命中率
         Row _row1 = sheet.createRow(c + 1);
         Cell cel_1 = _row1.createCell(3);
@@ -1005,7 +974,6 @@ public class APITest
             cel_1.setCellValue(String.format("%.2f", result1) + "%");
             cel_1.setCellStyle(style3);
         }
-
         OutputStream out = new FileOutputStream(outputFile);
         wb.write(out);
         out.close();
